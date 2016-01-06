@@ -1,4 +1,4 @@
-package com.zhulebei.security.impl;
+package com.swwx.security.impl;
 
 import org.apache.commons.io.IOUtils;
 

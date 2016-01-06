@@ -1,4 +1,4 @@
-package com.zhulebei.security.impl;
+package com.swwx.security.impl;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -7,7 +7,6 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

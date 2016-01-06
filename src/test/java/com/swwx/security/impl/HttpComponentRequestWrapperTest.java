@@ -1,4 +1,4 @@
-package com.zhulebei.security.impl;
+package com.swwx.security.impl;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -24,7 +24,7 @@ public class HttpComponentRequestWrapperTest {
         post.setEntity(entity);
 
         HttpComponentRequestWrapper w = new HttpComponentRequestWrapper(post);
-        HttpRequest actual = w.getWrappedRequest();
+        HttpRequest actual = w.getOriginalRequest();
 
         assertEquals("post", actual.getRequestLine().getMethod().toLowerCase());
         HttpEntity actualEntity = ((HttpEntityEnclosingRequestBase) actual).getEntity();

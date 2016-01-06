@@ -1,9 +1,9 @@
-package com.zhulebei.security;
+package com.swwx.security;
 
-import com.zhulebei.security.impl.HttpComponentRequestWrapper;
-import com.zhulebei.security.impl.Request;
-import com.zhulebei.security.impl.ServletHttpRequestWrapper;
-import com.zhulebei.security.impl.Signature;
+import com.swwx.security.impl.HttpComponentRequestWrapper;
+import com.swwx.security.impl.Request;
+import com.swwx.security.impl.ServletHttpRequestWrapper;
+import com.swwx.security.impl.Signature;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;

@@ -1,10 +1,9 @@
-package com.zhulebei.http;
+package com.swwx.http;
 
-import com.zhulebei.security.DefaultRequestSecurity;
+import com.swwx.security.DefaultRequestSecurity;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -29,8 +28,6 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HttpUtils {
 
