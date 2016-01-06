@@ -3,6 +3,7 @@ package com.swwx.http;
 import com.swwx.security.DefaultRequestSecurity;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.Registry;
@@ -15,12 +16,15 @@ import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
@@ -28,6 +32,8 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpUtils {
 
@@ -80,43 +86,106 @@ public class HttpUtils {
         }
     }
 
-    public static String post(String url, String jsonData, String uId)
+    public static Map<String, Object> post(String url, String jsonData, String uId)
             throws IOException, InvalidKeyException, NoSuchAlgorithmException {
+        Map<String, Object> result = new HashMap<>();
 
-        String rs = null;
-        HttpPost httppost = new HttpPost(url);
+        HttpPost httpPost = new HttpPost(url);
 
-        httppost.setEntity(
+        httpPost.setEntity(
                 new ByteArrayEntity(jsonData.getBytes(Charset.forName("utf-8")), ContentType.APPLICATION_JSON));
 
-        setCustomHeaders(httppost, uId);
+        setCustomHeaders(httpPost, uId);
 
         //进行签名
-        defaultRequestSecurity.sign(httppost);
+        defaultRequestSecurity.sign(httpPost);
 
-        CloseableHttpResponse response = httpsClient.execute(httppost);
+        CloseableHttpResponse response = httpsClient.execute(httpPost);
         try {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 try {
-                    rs = EntityUtils.toString(entity, Charset.forName("utf-8"));
+                    result.put("code", response.getStatusLine().getStatusCode());
+                    result.put("data", EntityUtils.toString(entity, Charset.forName("utf-8")));
                 } finally {
                     EntityUtils.consumeQuietly(entity);
                 }
             }
         } finally {
             response.close();
-            httppost.releaseConnection();
+            httpPost.releaseConnection();
         }
 
-        return rs;
+        return result;
+    }
+
+    public static Map<String, Object> httpGet(String url, String uId) throws IOException {
+        Map<String, Object> result = new HashMap<>();
+
+        HttpGet httpGet = new HttpGet(url);
+
+        setCustomHeaders(httpGet, uId);
+
+        //进行签名
+        defaultRequestSecurity.sign(httpGet);
+
+        CloseableHttpResponse response = httpsClient.execute(httpGet);
+        try {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try {
+                    result.put("code", response.getStatusLine().getStatusCode());
+                    result.put("data", EntityUtils.toString(entity, Charset.forName("utf-8")));
+                } finally {
+                    EntityUtils.consumeQuietly(entity);
+                }
+            }
+        } finally {
+            response.close();
+            httpGet.releaseConnection();
+        }
+
+        return result;
+    }
+
+    public static Map<String, Object> uploadFile(String url, File file, String uId) throws IOException {
+        Map<String, Object> result = new HashMap<>();
+
+        HttpPost httpPost = new HttpPost(url);
+
+        FileBody fileBody = new FileBody(file);
+        HttpEntity httpEntity = MultipartEntityBuilder.create().addPart("file", fileBody).build();
+
+        httpPost.setEntity(httpEntity);
+
+        setCustomHeaders(httpPost, uId);
+
+        //进行签名
+        defaultRequestSecurity.sign(httpPost);
+
+        CloseableHttpResponse response = httpsClient.execute(httpPost);
+        try {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try {
+                    result.put("code", response.getStatusLine().getStatusCode());
+                    result.put("data", EntityUtils.toString(entity, Charset.forName("utf-8")));
+                } finally {
+                    EntityUtils.consumeQuietly(entity);
+                }
+            }
+        } finally {
+            response.close();
+            httpPost.releaseConnection();
+        }
+
+        return result;
     }
 
     private static void setCustomHeaders(HttpRequestBase request, String uId) {
-        request.setHeader("Key", KEY);
-        request.setHeader("ProductNo", PRODUCT_NO);
-        request.setHeader("UId", uId);
-
+        request.setHeader("Key", KEY); //公钥
+        request.setHeader("ProductNo", PRODUCT_NO); //产品唯一标识
+        request.setHeader("UId", uId); //第三方用户唯一标识
     }
 
 }
