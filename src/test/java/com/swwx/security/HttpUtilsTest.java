@@ -28,7 +28,7 @@ public class HttpUtilsTest {
     public void testPost() throws NoSuchAlgorithmException, InvalidKeyException, IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("name", "张三");
-        Map<String, Object> result = HttpUtils.post("http://172.30.21.6:9000/v2/test", JSON.toJSONString(params), uId);
+        Map<String, Object> result = HttpUtils.post("http://dev-origin.zhulebei.com/api-test/v2/test", JSON.toJSONString(params), uId);
         System.out.println(result);
     }
 
@@ -37,7 +37,7 @@ public class HttpUtilsTest {
         String jsonStr =
                 "{\"idcards\":{\"idcardHand\":{\"serverId\":\"dceeeee7-68a2-4b13-ab5a-c6780db6c8b4\"},\"idcardBack\":{\"serverId\":\"67515d8e-58ae-4769-ade2-74670b5c81c4\"},\"idcardFront\":{\"serverId\":\"ad27bd38-a841-4aa3-8220-a795ba8a09df\"}},\"contacts\":[{\"contactPhone\":\"13211111111\",\"contactName\":\"张三\",\"contactType\":\"CLASSMATE\"}]}";
 
-        Map<String, Object> result = HttpUtils.post("http://172.30.21.6:9000/v2/materials", jsonStr, uId);
+        Map<String, Object> result = HttpUtils.post("http://dev-origin.zhulebei.com/api-test/v2/materials", jsonStr, uId);
 
         System.out.println(result);
     }
@@ -45,14 +45,14 @@ public class HttpUtilsTest {
     @Test
     public void testGet() throws IOException {
         Map<String, Object> result =
-                HttpUtils.httpGet("http://172.30.21.6:9000/v2/applies/WPS20151229a001", uId);
+                HttpUtils.httpGet("http://dev-origin.zhulebei.com/api-test/v2/applies/WPS20151229a001", uId);
         System.out.println(result);
     }
 
     @Test
     public void testUpload() throws IOException {
         File file = new File("/Users/dong/workspace/zhulebei-static/download/images/live_weixin.png");
-        Map<String, Object> result = HttpUtils.uploadFile("http://localhost:8081/v2/materials/images", file, uId);
+        Map<String, Object> result = HttpUtils.uploadFile("http://dev-origin.zhulebei.com/api-test/v2/materials/images", file, uId);
         System.out.println(result);
     }
 }
